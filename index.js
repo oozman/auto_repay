@@ -558,6 +558,9 @@ async function sendTelegramMessage(text) {
 }
 
 async function main() {
+
+    await sendTelegramMessage("Starting auto-repay script!");
+
     let option_check = await check_option()
     let UST_check = await check_remain_UST()
     if (option_check && UST_check) {
