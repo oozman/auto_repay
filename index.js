@@ -564,6 +564,8 @@ async function main() {
     let option_check = await check_option()
     let UST_check = await check_remain_UST()
     if (option_check && UST_check) {
+
+        let isSendNowPercent = 0
         while (true) {
             let nowPercent = await update_state()
             if (nowPercent > trigger_percent) {
@@ -602,6 +604,14 @@ async function main() {
 
             // Ping health checker.
             await pingHealth();
+
+            // Every 5 minutes, send borrow percent.
+            if (isSendNowPercent >= 5) {
+                await sendTelegramMessage(`Current borrow percent: ${nowPercent}`);
+                isSendNowPercent = 0;
+            } else {
+                isSendNowPercent++;
+            }
 
             await sleep(60000)
         }
