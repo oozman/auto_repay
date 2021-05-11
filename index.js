@@ -3,6 +3,7 @@ const fetchAPI = require('./fetchAPI')
 const fs = require('fs')
 const moment = require('moment');
 require('dotenv').config();
+const fetch = require('node-fetch');
 
 const MNEMONIC = process.env.MNEMONIC != '' ? process.env.MNEMONIC : process.argv[2];
 const COIN_TYPE = 330;
@@ -416,6 +417,7 @@ var belowTrigger = -1; //for someone who needs reborrow automatically
 var max_premium_rate = percent2number(option.max_premium_rate);
 var get_UST_option = option.get_UST_option;
 var instant_burn = option.instant_burn
+var healthchecker_url = option.healthchecker_url;
 
 // check the options and make readable data
 async function check_option(){
@@ -534,6 +536,11 @@ function sleep(ms) {
 }
 
 
+async function pingHealth() {
+    await fetch(healthchecker_url);
+    console.log("Pinged healthchecker!");
+}
+
 
 async function main(){
     let option_check = await check_option()
@@ -564,8 +571,9 @@ async function main(){
                 let ust_amount = parseInt((target_percent - percentNow) / percentNow * loanAmount)
                 await repayHandler.borrow_ust(ust_amount)
             }
-            
 
+            // Ping health checker.
+            await pingHealth();
 
             await sleep(60000)
         }
