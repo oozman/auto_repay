@@ -9,8 +9,6 @@ const Telegram = require("./entities/Telegram");
 const telegram = new Telegram(process.env.TELEGRAM_BOT_TOKEN);
 const telegramChatID = process.env.TELEGRAM_CHAT_ID;
 
-process.exit(0);
-
 const MNEMONIC = process.env.MNEMONIC != '' ? process.env.MNEMONIC : process.argv[2];
 const COIN_TYPE = 330;
 //contract addresses
